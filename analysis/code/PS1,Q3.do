@@ -3,12 +3,12 @@
 
 clear all
 cls
-cd "C:\Users\Yaobin's PC\Desktop\Q3"
+cd "C:\Users\Yaobin's PC\Desktop\problem-set-1-yaobinwang296\analysis\output"
 
 *********************************************
 *	Import SCF 2007 Summary Extract Data	*
 *********************************************
-use "C:\Users\Yaobin's PC\Desktop\Q3\SCF\scfp2007s\rscfp2007.dta", clear
+use "C:\Users\Yaobin's PC\Desktop\problem-set-1-yaobinwang296\analysis\input\rscfp2007.dta"
 
 
 *****************************************************************************
@@ -22,7 +22,6 @@ gen Income = wageinc+bussefarminc+kginc+intdivinc+ssretinc+transfothinc
 
 *	Wealth
 gen Wealth = networth
-
 
 *****************************************
 *	Replicate Table 1 from DGR(2011)	*
@@ -113,10 +112,21 @@ putexcel B4=(Gini_E) C4=(Gini_I) D4=(Gini_W) using Table2, modify
 *	Lorenz Curve	*
 *********************
 lorenz estimate Earnings [pw=wgt], gini
-lorenz graph, aspectratio(1) xlabel(, grid)
+lorenz graph, aspectratio(1) xlabel(, grid) legend(off) title(Lorenz Curve for Earnings)
+graph save lorenz_Earnings, replace
+graph export "C:\Users\Yaobin's PC\Desktop\problem-set-1-yaobinwang296\analysis\output\Lorenz_Earnings.pdf", as(pdf) replace
+erase  lorenz_Earnings.gph
+
 
 lorenz estimate Income [pw=wgt], gini
-lorenz graph, aspectratio(1) xlabel(, grid)
+lorenz graph, aspectratio(1) xlabel(, grid) legend(off) title(Lorenz Curve for Income)
+graph save lorenz_Income, replace
+graph export "C:\Users\Yaobin's PC\Desktop\problem-set-1-yaobinwang296\analysis\output\Lorenz_Income.pdf", as(pdf) replace
+erase  lorenz_Income.gph
+
 
 lorenz estimate Wealth [pw=wgt], gini
-lorenz graph, aspectratio(1) xlabel(, grid)
+lorenz graph, aspectratio(1) xlabel(, grid) legend(off) title(Lorenz Curve for Wealth)
+graph save lorenz_Wealth, replace
+graph export "C:\Users\Yaobin's PC\Desktop\problem-set-1-yaobinwang296\analysis\output\Lorenz_Wealth.pdf", as(pdf) replace
+erase  lorenz_Wealth.gph
