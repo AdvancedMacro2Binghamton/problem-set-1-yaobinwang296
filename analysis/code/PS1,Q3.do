@@ -11,6 +11,7 @@ cd "C:\Users\Yaobin's PC\Desktop\problem-set-1-yaobinwang296\analysis\output"
 use "C:\Users\Yaobin's PC\Desktop\problem-set-1-yaobinwang296\analysis\input\rscfp2007.dta"
 
 
+
 *****************************************************************************
 *	Construct earnings, income, and wealth variables according to DGR(2011)	*
 *****************************************************************************
@@ -22,6 +23,8 @@ gen Income = wageinc+bussefarminc+kginc+intdivinc+ssretinc+transfothinc
 
 *	Wealth
 gen Wealth = networth
+
+
 
 *****************************************
 *	Replicate Table 1 from DGR(2011)	*
@@ -53,9 +56,10 @@ matrix W=(r(min), W1, r(max))
 putexcel A4=("Wealth") B4=matrix (W) using Table1, modify
 
 
-*************************************
-* Replicate Table 2 from DGR(2011)	*
-*************************************
+
+*********************************************************
+* Replicate Table 2 from DGR(2011) and Plot Lorenz Curve*
+*********************************************************
 *	Coefficient of Variation and Mean/Median
 sum Earnings [aw=wgt], detail
 scalar CoVar_E=r(sd)/r(mean)
@@ -75,6 +79,7 @@ putexcel B1=("Earnings") C1=("Income") D1=("Wealth") A2=("Coefficient of Vaiatio
  A6=("Location of mean(%)") A7=("Mean/median") B2=(CoVar_E) C2=(CoVar_I) ///
  D2=(CoVar_W) B7=(MnMd_E) C7=(MnMd_I) D7=(MnMd_W) using Table2, replace
 
+ 
 *	Variance of the logs
 gen lnEarnings=log(Earnings)
 sum lnEarnings [aw=wgt], detail
@@ -91,42 +96,37 @@ scalar lnVar_W=r(Var)
 *	export results into Excel workbook
 putexcel B3=(lnVar_E) C3=(lnVar_I) D3=(lnVar_W) using Table2, modify
 
-*	Gini index
-fastgini Earnings [pw=wgt]
-scalar Gini_E=r(gini)
 
-fastgini Income [pw=wgt]
-scalar Gini_I=r(gini)
-
-fastgini Wealth [pw=wgt]
-scalar Gini_W=r(gini)
-
-*	export results into Excel workbook
-putexcel B4=(Gini_E) C4=(Gini_I) D4=(Gini_W) using Table2, modify
-
-*	Location of mean
-
-*	Top 1%/ lowest 40%
-
-*********************
-*	Lorenz Curve	*
-*********************
+*	Gini index and Lorenz curve
 lorenz estimate Earnings [pw=wgt], gini
+*	export gini index for Earnings into Excel workbook
+putexcel B4=matrix(e(G)) using Table2, modify
+*	plot Lorenz Curve
 lorenz graph, aspectratio(1) xlabel(, grid) legend(off) title(Lorenz Curve for Earnings)
 graph save lorenz_Earnings, replace
 graph export "C:\Users\Yaobin's PC\Desktop\problem-set-1-yaobinwang296\analysis\output\Lorenz_Earnings.pdf", as(pdf) replace
 erase  lorenz_Earnings.gph
 
-
 lorenz estimate Income [pw=wgt], gini
+*	export gini index for Income into Excel workbook
+putexcel C4=matrix(e(G)) using Table2, modify
+*	plot Lorenz Curve
 lorenz graph, aspectratio(1) xlabel(, grid) legend(off) title(Lorenz Curve for Income)
 graph save lorenz_Income, replace
 graph export "C:\Users\Yaobin's PC\Desktop\problem-set-1-yaobinwang296\analysis\output\Lorenz_Income.pdf", as(pdf) replace
 erase  lorenz_Income.gph
 
-
 lorenz estimate Wealth [pw=wgt], gini
+*	export gini index for Wealth into Excel workbook
+putexcel D4=matrix(e(G)) using Table2, modify
+*	plot Lorenz Curve
 lorenz graph, aspectratio(1) xlabel(, grid) legend(off) title(Lorenz Curve for Wealth)
 graph save lorenz_Wealth, replace
 graph export "C:\Users\Yaobin's PC\Desktop\problem-set-1-yaobinwang296\analysis\output\Lorenz_Wealth.pdf", as(pdf) replace
 erase  lorenz_Wealth.gph
+
+
+*	Location of mean
+
+
+*	Top 1%/ lowest 40%
