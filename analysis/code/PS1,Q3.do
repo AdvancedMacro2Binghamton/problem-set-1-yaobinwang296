@@ -127,6 +127,51 @@ erase  lorenz_Wealth.gph
 
 
 *	Location of mean
+summ Earnings [aw=wgt]
+scalar mean_E=r(mean)
+matrix P =J(99,1,0)
+forvalues i=1(1)99{
+_pctile Earnings [pw=wgt],p(`i')
+matrix P[`i',1]=r(r1)-mean_E
+if matrix P[`i',1]>0{
+scalar location=`i'
+}
+}
+di location
 
 
-*	Top 1%/ lowest 40%
+
+
+summ Earnings [aw=wgt]
+scalar mean_E=r(mean)
+local i=1
+local j=0
+if `i'<100|`j'<=0{
+_pctile Earnings [pw=wgt],p(`i')
+local j=r(r1)-mean_E
+local i=`i'+1
+}
+else{
+scalar location_E=`i'-1
+}
+di location_E
+
+
+
+summ Earnings [aw=wgt]
+scalar mean_E=r(mean)
+local i=1
+local j=0
+while `j'<=0{
+_pctile Earnings [pw=wgt],p(`i')
+local j=r(r1)-mean_E
+if `j'<=0{
+local i=`i'+1
+}
+else{
+scalar location_E=`i'-1
+}
+}
+di location_E
+
+*	Top 1%/ Lowest 40%
