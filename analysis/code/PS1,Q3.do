@@ -191,3 +191,35 @@ putexcel D6=(location_W) using Table2, modify
 
 ********************************************************************************
 *	Top 1%/ Lowest 40%
+_pctile Earnings [pw=wgt], p(40, 99)
+scalar threshold_EL=r(r1)
+scalar threshold_EH=r(r2)
+summ Earnings [aw=wgt] if Earnings<=threshold_EL
+scalar mean_EL=r(mean)
+summ Earnings [aw=wgt] if Earnings>threshold_EH
+scalar mean_EH=r(mean)
+scalar ratio_E=mean_EH/mean_EL
+*	export  Top 1%/Lowest 40% for Earnings
+putexcel B5=(ratio_E) using Table2, modify
+
+_pctile Income [pw=wgt], p(40, 99)
+scalar threshold_IL=r(r1)
+scalar threshold_IH=r(r2)
+summ Income [aw=wgt] if Income<=threshold_IL
+scalar mean_IL=r(mean)
+summ Income [aw=wgt] if Income>threshold_IH
+scalar mean_IH=r(mean)
+scalar ratio_I=mean_IH/mean_IL
+*	export  Top 1%/Lowest 40% for Income
+putexcel C5=(ratio_I) using Table2, modify
+
+_pctile Wealth [pw=wgt], p(40, 99)
+scalar threshold_WL=r(r1)
+scalar threshold_WH=r(r2)
+summ Wealth [aw=wgt] if Wealth<=threshold_WL
+scalar mean_WL=r(mean)
+summ Wealth [aw=wgt] if Wealth>threshold_WH
+scalar mean_WH=r(mean)
+scalar ratio_W=mean_WH/mean_WL
+*	export  Top 1%/Lowest 40% for Wealth
+putexcel D5=(ratio_W) using Table2, modify
